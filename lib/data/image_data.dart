@@ -1,6 +1,6 @@
 const String warrior1Idle = "assets/images/characters/warrior_1_idle.png";
-const String warrior1Run = "assets/images/characters/warrior_1_idle.png";
-const String warrior1Hit1 = "assets/images/characters/warrior_1_idle.png";
+const String warrior1Run = "assets/images/characters/warrior_1_run.png";
+const String warrior1Hit1 = "assets/images/characters/warrior_1_hit1.png";
 const String warrior1Defense = "assets/images/characters/warrior_1_idle.png";
 const String warrior1Death = "assets/images/characters/warrior_1_idle.png";
 

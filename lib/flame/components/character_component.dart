@@ -110,7 +110,7 @@ class CharacterComponent extends SpriteAnimationComponent
   }
 
   int getWaitHit() {
-    return (character.hit.time * 1000).toInt();
+    return (character.hit.hitTime! * 1000).toInt();
   }
 
   Future<void> setDamageColor() async {

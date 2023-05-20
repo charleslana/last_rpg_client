@@ -10,21 +10,19 @@ final warrior1 = CharacterModel(
     size: Vector2(39, 47),
     amount: 6,
     stepTime: 0.1,
-    time: 0.5,
   ),
   run: SpriteModel(
     image: warrior1Run,
-    size: Vector2(39, 47),
+    size: Vector2(50, 47),
     amount: 6,
-    stepTime: 0.3,
-    time: 0.5,
+    stepTime: 0.1,
   ),
   hit: SpriteModel(
     image: warrior1Hit1,
-    size: Vector2(39, 47),
-    amount: 6,
-    stepTime: 0.3,
-    time: 0.5,
+    size: Vector2(67, 59),
+    amount: 4,
+    stepTime: 0.1,
+    hitTime: 0.4,
     loop: false,
   ),
   defense: SpriteModel(
@@ -32,7 +30,6 @@ final warrior1 = CharacterModel(
     size: Vector2(39, 47),
     amount: 6,
     stepTime: 0.3,
-    time: 0.5,
     loop: false,
   ),
   death: SpriteModel(
@@ -40,7 +37,6 @@ final warrior1 = CharacterModel(
     size: Vector2(39, 47),
     amount: 6,
     stepTime: 0.3,
-    time: 0.5,
     loop: false,
   ),
 );

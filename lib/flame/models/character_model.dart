@@ -25,7 +25,7 @@ class SpriteModel {
   final double stepTime;
   final int? amountPerRow;
   final bool loop;
-  final double time;
+  final double? hitTime;
 
   const SpriteModel({
     required this.image,
@@ -34,6 +34,6 @@ class SpriteModel {
     required this.stepTime,
     this.amountPerRow,
     this.loop = true,
-    required this.time,
+    this.hitTime,
   });
 }
