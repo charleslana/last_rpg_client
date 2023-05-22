@@ -60,9 +60,9 @@ class BattleGame extends FlameGame {
     _character3 = CharacterComponent(character: warrior1);
     _character4 = CharacterComponent(character: warrior1);
     _character5 = CharacterComponent(character: warrior1);
-    _character6 = CharacterComponent(character: warrior1);
+    _character6 = CharacterComponent(character: warrior2);
 
-    _enemy1 = CharacterComponent(character: warrior1, isFlip: true);
+    _enemy1 = CharacterComponent(character: warrior2, isFlip: true);
     _enemy2 = CharacterComponent(character: warrior1, isFlip: true);
     _enemy3 = CharacterComponent(character: warrior1, isFlip: true);
     _enemy4 = CharacterComponent(character: warrior1, isFlip: true);
