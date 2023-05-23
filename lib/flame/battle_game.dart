@@ -56,18 +56,18 @@ class BattleGame extends FlameGame {
     await add(BattleBackgroundComponent());
 
     _character1 = CharacterComponent(character: warrior1);
-    _character2 = CharacterComponent(character: warrior1);
+    _character2 = CharacterComponent(character: warrior2);
     _character3 = CharacterComponent(character: warrior1);
     _character4 = CharacterComponent(character: warrior1);
     _character5 = CharacterComponent(character: warrior1);
-    _character6 = CharacterComponent(character: warrior2);
+    _character6 = CharacterComponent(character: warrior1);
 
     _enemy1 = CharacterComponent(character: warrior2, isFlip: true);
     _enemy2 = CharacterComponent(character: warrior1, isFlip: true);
     _enemy3 = CharacterComponent(character: warrior1, isFlip: true);
     _enemy4 = CharacterComponent(character: warrior1, isFlip: true);
     _enemy5 = CharacterComponent(character: warrior1, isFlip: true);
-    _enemy6 = CharacterComponent(character: warrior1, isFlip: true);
+    _enemy6 = CharacterComponent(character: warrior2, isFlip: true);
 
     _characterPosition1 = CharacterPositionComponent(
       character: _character1,
