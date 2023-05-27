@@ -21,6 +21,20 @@ class CharacterPositionComponent extends PositionComponent
     required this.priorityCharacter,
   });
 
+  CharacterPositionComponent copyWith({
+    CharacterComponent? character,
+    double? positionX,
+    double? positionY,
+    int? priorityCharacter,
+  }) {
+    return CharacterPositionComponent(
+      character: character ?? this.character,
+      positionX: positionX ?? this.positionX,
+      positionY: positionY ?? this.positionY,
+      priorityCharacter: priorityCharacter ?? this.priorityCharacter,
+    );
+  }
+
   late EmptyHpBarComponent emptyHpBarComponent;
   late EmptyRageBarComponent emptyRageBarComponent;
   late DamageComponent damageComponent;
@@ -51,10 +65,18 @@ class CharacterPositionComponent extends PositionComponent
 
     await add(character);
 
-    emptyHpBarComponent = EmptyHpBarComponent(characterPositionSize: size);
+    emptyHpBarComponent = EmptyHpBarComponent(
+      characterPositionSize: size,
+      characterScale: character.character.scale,
+      isFlip: character.isFlip,
+    );
     await add(emptyHpBarComponent);
 
-    emptyRageBarComponent = EmptyRageBarComponent(characterPositionSize: size);
+    emptyRageBarComponent = EmptyRageBarComponent(
+      characterPositionSize: size,
+      characterScale: character.character.scale,
+      isFlip: character.isFlip,
+    );
     await add(emptyRageBarComponent);
 
     damageComponent = DamageComponent(characterPositionSize: size);

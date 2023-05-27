@@ -7,9 +7,13 @@ import '../../data/image_data.dart';
 
 class EmptyRageBarComponent extends PositionComponent {
   final Vector2 characterPositionSize;
+  final double characterScale;
+  final bool isFlip;
 
   EmptyRageBarComponent({
     required this.characterPositionSize,
+    required this.characterScale,
+    required this.isFlip,
   });
 
   SpriteComponent _spriteComponent = SpriteComponent();
@@ -26,8 +30,14 @@ class EmptyRageBarComponent extends PositionComponent {
 
     scale = Vector2.all(characterPositionSize.x * 0.7 / 100);
 
+    double pX = 0;
+
+    if (isFlip) {
+      pX = characterPositionSize.x * characterScale * 1.2;
+    }
+
     position =
-        Vector2(0, characterPositionSize.y - characterPositionSize.y * 2.149);
+        Vector2(pX, characterPositionSize.y - characterPositionSize.y * 2.149);
 
     priority = 1;
 

@@ -4,17 +4,27 @@ import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 
 import '../battle_game.dart';
-import '../models/character_model.dart';
+import '../models/character_flame_model.dart';
 
 class CharacterComponent extends SpriteAnimationComponent
     with HasGameRef<BattleGame> {
-  final CharacterModel character;
+  final CharacterFlameModel character;
   final bool isFlip;
 
   CharacterComponent({
     required this.character,
     this.isFlip = false,
   });
+
+  CharacterComponent copyWith({
+    CharacterFlameModel? character,
+    bool? isFlip,
+  }) {
+    return CharacterComponent(
+      character: character ?? this.character,
+      isFlip: isFlip ?? this.isFlip,
+    );
+  }
 
   final SpriteAnimationComponent _spriteAnimationComponent =
       SpriteAnimationComponent();

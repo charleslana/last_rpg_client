@@ -1,6 +1,6 @@
 import 'package:flame/components.dart';
 
-class CharacterModel {
+class CharacterFlameModel {
   final double scale;
   final SpriteModel idle;
   final SpriteModel run;
@@ -8,7 +8,7 @@ class CharacterModel {
   final SpriteModel defense;
   final SpriteModel death;
 
-  const CharacterModel({
+  const CharacterFlameModel({
     required this.scale,
     required this.idle,
     required this.run,

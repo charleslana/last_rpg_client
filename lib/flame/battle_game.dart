@@ -4,6 +4,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/game.dart';
 import 'package:flame/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:last_rpg_client/data/battle_data.dart';
 
 import '../data/character_data.dart';
 import '../data/character_position_data.dart';
@@ -13,12 +14,12 @@ import 'components/character_position_component.dart';
 import 'components/skill_component.dart';
 
 class BattleGame extends FlameGame {
-  late CharacterComponent _character1;
-  late CharacterComponent _character2;
-  late CharacterComponent _character3;
-  late CharacterComponent _character4;
-  late CharacterComponent _character5;
-  late CharacterComponent _character6;
+  late CharacterComponent _friend1;
+  late CharacterComponent _friend2;
+  late CharacterComponent _friend3;
+  late CharacterComponent _friend4;
+  late CharacterComponent _friend5;
+  late CharacterComponent _friend6;
 
   late CharacterComponent _enemy1;
   late CharacterComponent _enemy2;
@@ -27,12 +28,12 @@ class BattleGame extends FlameGame {
   late CharacterComponent _enemy5;
   late CharacterComponent _enemy6;
 
-  late CharacterPositionComponent _characterPosition1;
-  late CharacterPositionComponent _characterPosition2;
-  late CharacterPositionComponent _characterPosition3;
-  late CharacterPositionComponent _characterPosition4;
-  late CharacterPositionComponent _characterPosition5;
-  late CharacterPositionComponent _characterPosition6;
+  late CharacterPositionComponent _friendPosition1;
+  late CharacterPositionComponent _friendPosition2;
+  late CharacterPositionComponent _friendPosition3;
+  late CharacterPositionComponent _friendPosition4;
+  late CharacterPositionComponent _friendPosition5;
+  late CharacterPositionComponent _friendPosition6;
 
   late CharacterPositionComponent _enemyPosition1;
   late CharacterPositionComponent _enemyPosition2;
@@ -55,12 +56,64 @@ class BattleGame extends FlameGame {
 
     await add(BattleBackgroundComponent());
 
-    _character1 = CharacterComponent(character: warrior1);
-    _character2 = CharacterComponent(character: warrior2);
-    _character3 = CharacterComponent(character: warrior1);
-    _character4 = CharacterComponent(character: warrior1);
-    _character5 = CharacterComponent(character: warrior1);
-    _character6 = CharacterComponent(character: warrior1);
+    _addCharacters();
+
+    await _mountBattle();
+
+    await add(SkillComponent());
+    return super.onLoad();
+  }
+
+  void setMoveLoopDuration() {
+    moveLoopDuration = (moveForwardDuration * 1000).toInt() +
+        (moveBackDuration * 1000).toInt() +
+        moveWaitDuration;
+  }
+
+  Future<void> runAllCharacters() async {
+    _enemyPosition6.character.resetOpacity();
+    final list = [1, 2, 3, 4, 5];
+    int loopDuration = 0;
+    await Future.forEach(list, (i) async {
+      switch (i) {
+        case 1:
+          await _moveCharacter(_enemyPosition6, _friendPosition1);
+          break;
+        case 2:
+          final characterPosition = _friendPosition2;
+          loopDuration =
+              moveLoopDuration + _enemyPosition6.character.getWaitHit();
+          await Future.delayed(Duration(milliseconds: loopDuration), () async {
+            await _moveCharacter(characterPosition, _enemyPosition6);
+          });
+          break;
+        case 3:
+          final characterPosition = _friendPosition3;
+          loopDuration =
+              moveLoopDuration + characterPosition.character.getWaitHit();
+          await Future.delayed(Duration(milliseconds: loopDuration), () async {
+            await _moveCharacter(characterPosition, _enemyPosition6);
+          });
+          break;
+        case 4:
+          final characterPosition = _friendPosition4;
+          loopDuration =
+              moveLoopDuration + characterPosition.character.getWaitHit();
+          await Future.delayed(Duration(milliseconds: loopDuration), () async {
+            await _moveCharacter(characterPosition, _enemyPosition6, true);
+          });
+          break;
+      }
+    });
+  }
+
+  void _addCharacters() {
+    _friend1 = CharacterComponent(character: warrior1);
+    _friend2 = CharacterComponent(character: warrior2);
+    _friend3 = CharacterComponent(character: warrior1);
+    _friend4 = CharacterComponent(character: warrior1);
+    _friend5 = CharacterComponent(character: warrior1);
+    _friend6 = CharacterComponent(character: warrior1);
 
     _enemy1 = CharacterComponent(character: warrior2, isFlip: true);
     _enemy2 = CharacterComponent(character: warrior1, isFlip: true);
@@ -69,43 +122,43 @@ class BattleGame extends FlameGame {
     _enemy5 = CharacterComponent(character: warrior1, isFlip: true);
     _enemy6 = CharacterComponent(character: warrior2, isFlip: true);
 
-    _characterPosition1 = CharacterPositionComponent(
-      character: _character1,
+    _friendPosition1 = CharacterPositionComponent(
+      character: _friend1,
       positionX: positionAllyX1,
       positionY: positionAllyY1,
       priorityCharacter: 1,
     );
 
-    _characterPosition2 = CharacterPositionComponent(
-      character: _character2,
+    _friendPosition2 = CharacterPositionComponent(
+      character: _friend2,
       positionX: positionAllyX2,
       positionY: positionAllyY2,
       priorityCharacter: 2,
     );
 
-    _characterPosition3 = CharacterPositionComponent(
-      character: _character3,
+    _friendPosition3 = CharacterPositionComponent(
+      character: _friend3,
       positionX: positionAllyX3,
       positionY: positionAllyY3,
       priorityCharacter: 3,
     );
 
-    _characterPosition4 = CharacterPositionComponent(
-      character: _character4,
+    _friendPosition4 = CharacterPositionComponent(
+      character: _friend4,
       positionX: positionAllyX4,
       positionY: positionAllyY4,
       priorityCharacter: 4,
     );
 
-    _characterPosition5 = CharacterPositionComponent(
-      character: _character5,
+    _friendPosition5 = CharacterPositionComponent(
+      character: _friend5,
       positionX: positionAllyX5,
       positionY: positionAllyY5,
       priorityCharacter: 5,
     );
 
-    _characterPosition6 = CharacterPositionComponent(
-      character: _character6,
+    _friendPosition6 = CharacterPositionComponent(
+      character: _friend6,
       positionX: positionAllyX6,
       positionY: positionAllyY6,
       priorityCharacter: 6,
@@ -152,64 +205,79 @@ class BattleGame extends FlameGame {
       positionY: positionEnemyY6,
       priorityCharacter: 6,
     );
-
-    await add(_characterPosition1);
-    await add(_characterPosition2);
-    await add(_characterPosition3);
-    await add(_characterPosition4);
-    await add(_characterPosition5);
-    await add(_characterPosition6);
-
-    await add(_enemyPosition1);
-    await add(_enemyPosition2);
-    await add(_enemyPosition3);
-    await add(_enemyPosition4);
-    await add(_enemyPosition5);
-    await add(_enemyPosition6);
-
-    await add(SkillComponent());
-    return super.onLoad();
   }
 
-  void setMoveLoopDuration() {
-    moveLoopDuration = (moveForwardDuration * 1000).toInt() +
-        (moveBackDuration * 1000).toInt() +
-        moveWaitDuration;
+  Future<void> _mountBattle() async {
+    await _mountFriends();
+    await _mountEnemies();
   }
 
-  Future<void> runAllCharacters() async {
-    _enemyPosition6.character.resetOpacity();
-    final list = [1, 2, 3, 4, 5];
-    int loopDuration = 0;
-    await Future.forEach(list, (i) async {
-      switch (i) {
-        case 1:
-          await _moveCharacter(_enemyPosition6, _characterPosition1);
-          break;
-        case 2:
-          final characterPosition = _characterPosition2;
-          loopDuration =
-              moveLoopDuration + _enemyPosition6.character.getWaitHit();
-          await Future.delayed(Duration(milliseconds: loopDuration), () async {
-            await _moveCharacter(characterPosition, _enemyPosition6);
-          });
-          break;
-        case 3:
-          final characterPosition = _characterPosition3;
-          loopDuration =
-              moveLoopDuration + characterPosition.character.getWaitHit();
-          await Future.delayed(Duration(milliseconds: loopDuration), () async {
-            await _moveCharacter(characterPosition, _enemyPosition6);
-          });
-          break;
-        case 4:
-          final characterPosition = _characterPosition4;
-          loopDuration =
-              moveLoopDuration + characterPosition.character.getWaitHit();
-          await Future.delayed(Duration(milliseconds: loopDuration), () async {
-            await _moveCharacter(characterPosition, _enemyPosition6, true);
-          });
-          break;
+  Future<void> _mountFriends() async {
+    userCharacters.asMap().forEach((index, uc) async {
+      if (index == 0) {
+        _friend1 = _friend1.copyWith(character: getCharacter(uc.character));
+        _friendPosition1 = _friendPosition1.copyWith(character: _friend1);
+        await add(_friendPosition1);
+      }
+      if (index == 1) {
+        _friend2 = _friend2.copyWith(character: getCharacter(uc.character));
+        _friendPosition2 = _friendPosition2.copyWith(character: _friend2);
+        await add(_friendPosition2);
+      }
+      if (index == 2) {
+        _friend3 = _friend3.copyWith(character: getCharacter(uc.character));
+        _friendPosition3 = _friendPosition3.copyWith(character: _friend3);
+        await add(_friendPosition3);
+      }
+      if (index == 3) {
+        _friend4 = _friend4.copyWith(character: getCharacter(uc.character));
+        _friendPosition4 = _friendPosition4.copyWith(character: _friend4);
+        await add(_friendPosition4);
+      }
+      if (index == 4) {
+        _friend5 = _friend5.copyWith(character: getCharacter(uc.character));
+        _friendPosition5 = _friendPosition5.copyWith(character: _friend5);
+        await add(_friendPosition5);
+      }
+      if (index == 5) {
+        _friend6 = _friend6.copyWith(character: getCharacter(uc.character));
+        _friendPosition6 = _friendPosition6.copyWith(character: _friend6);
+        await add(_friendPosition6);
+      }
+    });
+  }
+
+  Future<void> _mountEnemies() async {
+    enemyCharacter.asMap().forEach((index, uc) async {
+      if (index == 0) {
+        _enemy1 = _enemy1.copyWith(character: getCharacter(uc.character));
+        _enemyPosition1 = _enemyPosition1.copyWith(character: _enemy1);
+        await add(_enemyPosition1);
+      }
+      if (index == 1) {
+        _enemy2 = _enemy2.copyWith(character: getCharacter(uc.character));
+        _enemyPosition2 = _enemyPosition2.copyWith(character: _enemy2);
+        await add(_enemyPosition2);
+      }
+      if (index == 2) {
+        _enemy3 = _enemy3.copyWith(character: getCharacter(uc.character));
+        _enemyPosition3 = _enemyPosition3.copyWith(character: _enemy3);
+        await add(_enemyPosition3);
+      }
+      if (index == 3) {
+        _enemy4 = _enemy4.copyWith(character: getCharacter(uc.character));
+        _enemyPosition4 = _enemyPosition4.copyWith(character: _enemy4);
+        await add(_enemyPosition4);
+      }
+      if (index == 4) {
+        _enemy5 = _enemy5.copyWith(character: getCharacter(uc.character));
+        _enemyPosition5 = _enemyPosition5.copyWith(character: _enemy5);
+        await add(_enemyPosition5);
+      }
+      if (index == 5) {
+        _enemy6 = _enemy6.copyWith(character: getCharacter(uc.character));
+        _enemyPosition6 = _enemyPosition6.copyWith(character: _enemy6);
+        await add(_enemyPosition6);
       }
     });
   }

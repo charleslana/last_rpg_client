@@ -1,9 +1,10 @@
 import 'package:flame/components.dart';
+import 'package:last_rpg_client/model/character_model.dart';
 
-import '../flame/models/character_model.dart';
+import '../flame/models/character_flame_model.dart';
 import 'image_data.dart';
 
-final warrior1 = CharacterModel(
+final warrior1 = CharacterFlameModel(
   scale: 0.35,
   idle: SpriteModel(
     image: warrior1Idle,
@@ -41,7 +42,7 @@ final warrior1 = CharacterModel(
   ),
 );
 
-final warrior2 = CharacterModel(
+final warrior2 = CharacterFlameModel(
   scale: 0.35,
   idle: SpriteModel(
     image: warrior2Idle,
@@ -78,3 +79,14 @@ final warrior2 = CharacterModel(
     loop: false,
   ),
 );
+
+CharacterFlameModel getCharacter(CharacterModel character) {
+  switch (character.id) {
+    case 1:
+      return warrior1;
+    case 2:
+      return warrior2;
+    default:
+      return warrior1;
+  }
+}
