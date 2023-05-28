@@ -1,29 +1,29 @@
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:last_rpg_client/flame/components/rage_bar_component.dart';
+import 'package:last_rpg_client/flame/components/fury_bar_component.dart';
 
 import '../../data/image_data.dart';
 
-class EmptyRageBarComponent extends PositionComponent {
+class EmptyFuryBarComponent extends PositionComponent {
   final Vector2 characterPositionSize;
   final double characterScale;
   final bool isFlip;
 
-  EmptyRageBarComponent({
+  EmptyFuryBarComponent({
     required this.characterPositionSize,
     required this.characterScale,
     required this.isFlip,
   });
 
   SpriteComponent _spriteComponent = SpriteComponent();
-  final _rageBarComponent = RageBarComponent();
+  final _rageBarComponent = FuryBarComponent();
 
   @override
   Future<void> onLoad() async {
     _spriteComponent = SpriteComponent()
       ..sprite = await Sprite.load(
-        rageBgBar,
+        furyBgBar,
         images: Images(prefix: ""),
       )
       ..size = Vector2(80, 8);

@@ -4,14 +4,14 @@ import 'package:flame/effects.dart';
 
 import '../../data/image_data.dart';
 
-class RageBarComponent extends PositionComponent {
+class FuryBarComponent extends PositionComponent {
   SpriteComponent _spriteComponent = SpriteComponent();
 
   @override
   Future<void> onLoad() async {
     _spriteComponent = SpriteComponent()
       ..sprite = await Sprite.load(
-        rageBar,
+        furyBar,
         images: Images(prefix: ""),
       )
       ..size = Vector2(0, 8);

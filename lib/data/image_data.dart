@@ -15,7 +15,7 @@ const String stage1 = "assets/images/stages/1.png";
 const String hpBar = "assets/images/bars/bar_hp.png";
 const String hp1Bar = "assets/images/bars/bar_hp1.png";
 const String hpBgBar = "assets/images/bars/bar_hp_bgr.png";
-const String rageBar = "assets/images/bars/bar_rage.png";
-const String rageBgBar = "assets/images/bars/bar_rage_bgr.png";
+const String furyBar = "assets/images/bars/bar_fury.png";
+const String furyBgBar = "assets/images/bars/bar_fury_bgr.png";
 
 const String battleShadow = "assets/images/battle/shadow.png";

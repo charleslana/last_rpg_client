@@ -1,0 +1,4 @@
+enum CharacterTurnEnum {
+  friend,
+  enemy,
+}

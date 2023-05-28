@@ -5,7 +5,7 @@ import '../battle_game.dart';
 import 'character_component.dart';
 import 'damage_component.dart';
 import 'empty_hp_bar_component.dart';
-import 'empty_rage_bar_component.dart';
+import 'empty_fury_bar_component.dart';
 
 class CharacterPositionComponent extends PositionComponent
     with HasGameRef<BattleGame> {
@@ -36,7 +36,7 @@ class CharacterPositionComponent extends PositionComponent
   }
 
   late EmptyHpBarComponent emptyHpBarComponent;
-  late EmptyRageBarComponent emptyRageBarComponent;
+  late EmptyFuryBarComponent emptyFuryBarComponent;
   late DamageComponent damageComponent;
   late ShadowComponent shadowComponent;
 
@@ -72,12 +72,12 @@ class CharacterPositionComponent extends PositionComponent
     );
     await add(emptyHpBarComponent);
 
-    emptyRageBarComponent = EmptyRageBarComponent(
+    emptyFuryBarComponent = EmptyFuryBarComponent(
       characterPositionSize: size,
       characterScale: character.character.scale,
       isFlip: character.isFlip,
     );
-    await add(emptyRageBarComponent);
+    await add(emptyFuryBarComponent);
 
     damageComponent = DamageComponent(characterPositionSize: size);
     await add(damageComponent);
@@ -96,12 +96,12 @@ class CharacterPositionComponent extends PositionComponent
   Future<void> hideAll() async {
     await emptyHpBarComponent.hide();
     await shadowComponent.hide();
-    await emptyRageBarComponent.hide();
+    await emptyFuryBarComponent.hide();
   }
 
   Future<void> showAll() async {
     await emptyHpBarComponent.show();
     await shadowComponent.show();
-    await emptyRageBarComponent.show();
+    await emptyFuryBarComponent.show();
   }
 }
