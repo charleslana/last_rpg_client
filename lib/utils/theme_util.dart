@@ -7,3 +7,11 @@ TextStyle dinRegular({
     fontFamily: fontFamily,
   );
 }
+
+TextStyle highSpeedRegular({
+  String fontFamily = 'HighSpeed',
+}) {
+  return TextStyle(
+    fontFamily: fontFamily,
+  );
+}

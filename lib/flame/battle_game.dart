@@ -7,15 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:last_rpg_client/data/battle_data.dart';
 import 'package:last_rpg_client/enum/character_turn_enum.dart';
 import 'package:last_rpg_client/model/battle_report_model.dart';
+import 'package:last_rpg_client/routes/app_routes.dart';
 
 import '../data/character_data.dart';
 import '../data/character_position_data.dart';
+import '../utils/utils.dart';
 import 'components/battle_background_component.dart';
 import 'components/character_component.dart';
 import 'components/character_position_component.dart';
 import 'components/skill_component.dart';
 
 class BattleGame extends FlameGame {
+  final BuildContext context;
+
+  BattleGame(this.context);
+
   late CharacterComponent _friend1;
   late CharacterComponent _friend2;
   late CharacterComponent _friend3;
@@ -73,7 +79,7 @@ class BattleGame extends FlameGame {
   }
 
   Future<void> runAllCharacters() async {
-    final reports = getReport().reports;
+    final reports = _getReport().reports;
     int loopDuration = 0;
     await Future.forEach(reports, (report) async {
       final source = _getTurn(report);
@@ -89,6 +95,11 @@ class BattleGame extends FlameGame {
       await Future.delayed(Duration(milliseconds: loopDuration), () async {
         await _moveCharacter(source, target, report);
       });
+    });
+    var target = _getEnemyPosition(reports.last.enemyPosition);
+    loopDuration = moveLoopDuration + target.character.getWaitHit();
+    await Future.delayed(Duration(milliseconds: loopDuration), () async {
+      _showFinishDialog();
     });
   }
 
@@ -242,12 +253,45 @@ class BattleGame extends FlameGame {
     await _mountEnemies();
   }
 
-  BattleReportModel getReport() {
+  BattleReportModel _getReport() {
     return battleReport;
   }
 
+  void _showFinishDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: AlertDialog(
+            title: Text(
+              "Vitória".toUpperCase(),
+              textAlign: TextAlign.center,
+            ),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Prêmios da batalha 1"),
+                Text("Prêmios da batalha 2"),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                child: const Text("Ok"),
+                onPressed: () {
+                  pushReplacementNamed(context, landingRoute);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _mountFriends() async {
-    getReport().friendCharacters.asMap().forEach((index, uc) async {
+    _getReport().friendCharacters.asMap().forEach((index, uc) async {
       if (index == 0) {
         _friend1 = _friend1.copyWith(character: getCharacter(uc.character));
         _friendPosition1 = _friendPosition1.copyWith(character: _friend1);
@@ -282,7 +326,7 @@ class BattleGame extends FlameGame {
   }
 
   Future<void> _mountEnemies() async {
-    getReport().enemyCharacters.asMap().forEach((index, uc) async {
+    _getReport().enemyCharacters.asMap().forEach((index, uc) async {
       if (index == 0) {
         _enemy1 = _enemy1.copyWith(character: getCharacter(uc.character));
         _enemyPosition1 = _enemyPosition1.copyWith(character: _enemy1);
@@ -320,6 +364,7 @@ class BattleGame extends FlameGame {
       CharacterPositionComponent target, ReportModel report) async {
     final characterPosition = source;
     final enemyPosition = target;
+    characterPosition.hideHit();
     characterPosition.changePriority(7);
     await characterPosition.hideAll();
     await characterPosition.character.setRunningAnimation();
@@ -339,7 +384,12 @@ class BattleGame extends FlameGame {
                       moveWaitDuration), () async {
             if (report.hpDefense != null) {
               enemyPosition.emptyHpBarComponent.changeSize(report.hpDefense!);
+              if (report.critical == true) {
+                await enemyPosition.criticalTextComponent.show();
+              }
               await enemyPosition.damageComponent.show(report.damage!);
+            } else {
+              await enemyPosition.dodgeTextComponent.show();
             }
             if (report.death == true) {
               await enemyPosition.character.setDeathAnimation();

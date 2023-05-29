@@ -10,8 +10,7 @@ class SkillComponent extends PositionComponent
 
   @override
   void onGameResize(Vector2 size) {
-    position = Vector2(
-        gameRef.size.x * 46 / 100, gameRef.size.y * 80 / 100);
+    position = Vector2(gameRef.size.x * 46 / 100, gameRef.size.y * 80 / 100);
     this.size = Vector2(32, 32);
     scale = Vector2.all(gameRef.size.x * 0.2 / 100);
     _paint.color = Colors.deepPurple;
@@ -49,6 +48,11 @@ class SkillComponent extends PositionComponent
   @override
   void onTapUp(TapUpEvent event) {
     gameRef.runAllCharacters();
+    _hide();
     super.onTapUp(event);
+  }
+
+  void _hide() {
+    size = Vector2.all(0);
   }
 }

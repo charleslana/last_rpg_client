@@ -24,6 +24,8 @@ class ReportModel {
   final int? furyDefense;
   final int? furyAttack;
   final bool? death;
+  final bool? critical;
+  final bool? dodge;
   ReportModel({
     required this.turnQuantity,
     required this.turn,
@@ -34,5 +36,7 @@ class ReportModel {
     this.furyDefense,
     this.furyAttack,
     this.death,
+    this.critical,
+    this.dodge,
   });
 }

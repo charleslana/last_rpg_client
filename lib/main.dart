@@ -1,8 +1,8 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'flame/battle_game.dart';
+import 'routes/app_route_generator.dart';
+import 'routes/app_routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,28 +23,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Loncheguili RPG',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GameWidget<BattleGame>(
-      game: BattleGame(),
-      loadingBuilder: (context) => const Material(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      ),
+      initialRoute: landingRoute,
+      onGenerateRoute: AppRouteGenerator.generateRoute,
     );
   }
 }

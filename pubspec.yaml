@@ -33,3 +33,7 @@ flutter:
     - family: DIN
       fonts:
         - asset: assets/fonts/DIN-Alternate-Bold.ttf
+
+    - family: HighSpeed
+      fonts:
+        - asset: assets/fonts/HighSpeed-Regular.otf

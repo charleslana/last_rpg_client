@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 String numberAbbreviation(dynamic number) {
@@ -10,4 +11,16 @@ String numberAbbreviation(dynamic number) {
 String decimalNumberFormat(dynamic number) {
   final NumberFormat numberFormat = NumberFormat.decimalPattern();
   return numberFormat.format(int.parse(number)).replaceAll(",", ".");
+}
+
+void pop(BuildContext context) {
+  Navigator.pop(context);
+}
+
+void pushNamed(BuildContext context, String route) {
+  Navigator.pushNamed(context, route);
+}
+
+void pushReplacementNamed(BuildContext context, String route) {
+  Navigator.pushReplacementNamed(context, route);
 }

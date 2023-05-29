@@ -3,13 +3,16 @@ import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/theme_util.dart';
-import '../../utils/utils.dart';
 
-class DamageComponent extends TextComponent {
+class HitTextComponent extends TextComponent {
   final Vector2 characterPositionSize;
+  final String hitText;
+  final Color color;
 
-  DamageComponent({
+  HitTextComponent({
     required this.characterPositionSize,
+    required this.hitText,
+    required this.color,
   });
 
   TextComponent _textComponent = TextComponent();
@@ -17,7 +20,7 @@ class DamageComponent extends TextComponent {
   @override
   Future<void> onLoad() async {
     _textComponent =
-        _getTextComponent(_getTextPaint(characterPositionSize.y / 3.5), 0);
+        _getTextComponent(_getTextPaint(characterPositionSize.y / 3.5));
 
     position =
         Vector2(0, characterPositionSize.y - characterPositionSize.y * 2.15);
@@ -31,9 +34,9 @@ class DamageComponent extends TextComponent {
     return super.onLoad();
   }
 
-  TextComponent _getTextComponent(TextPaint textPaint, int value) {
+  TextComponent _getTextComponent(TextPaint textPaint) {
     return TextComponent(
-      text: '-${numberAbbreviation(value)}',
+      text: hitText.toUpperCase(),
       textRenderer: textPaint,
       size: Vector2(size.x / 7, size.y / 3),
       position: Vector2(size.x / 6.5, size.y / 50),
@@ -42,8 +45,8 @@ class DamageComponent extends TextComponent {
 
   TextPaint _getTextPaint(double fontSize) {
     return TextPaint(
-      style: dinRegular().copyWith(
-        color: Colors.red,
+      style: highSpeedRegular().copyWith(
+        color: color,
         fontSize: fontSize,
         shadows: const [
           Shadow(offset: Offset(-1.5, -1.5)),
@@ -59,9 +62,9 @@ class DamageComponent extends TextComponent {
     _textComponent.textRenderer = _getTextPaint(0);
   }
 
-  Future<void> show(int damageValue) async {
+  Future<void> show() async {
     _textComponent.textRenderer = _getTextPaint(characterPositionSize.y / 3.5);
-    _textComponent.text = "-${decimalNumberFormat(damageValue.toString())}";
+    _textComponent.text = hitText.toUpperCase();
     await _move();
   }
 

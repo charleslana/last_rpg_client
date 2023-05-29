@@ -1,4 +1,6 @@
 import 'package:flame/components.dart';
+import 'package:flutter/material.dart';
+import 'package:last_rpg_client/flame/components/hit_text_component.dart';
 import 'package:last_rpg_client/flame/components/shadow_component.dart';
 
 import '../battle_game.dart';
@@ -39,6 +41,8 @@ class CharacterPositionComponent extends PositionComponent
   late EmptyFuryBarComponent emptyFuryBarComponent;
   late DamageComponent damageComponent;
   late ShadowComponent shadowComponent;
+  late HitTextComponent criticalTextComponent;
+  late HitTextComponent dodgeTextComponent;
 
   late Vector2 _starterPosition;
 
@@ -79,6 +83,20 @@ class CharacterPositionComponent extends PositionComponent
     );
     await add(emptyFuryBarComponent);
 
+    criticalTextComponent = HitTextComponent(
+      characterPositionSize: size,
+      hitText: "Crítico",
+      color: Colors.orange,
+    );
+    await add(criticalTextComponent);
+
+    dodgeTextComponent = HitTextComponent(
+      characterPositionSize: size,
+      hitText: "Esquivou",
+      color: Colors.grey,
+    );
+    await add(dodgeTextComponent);
+
     damageComponent = DamageComponent(characterPositionSize: size);
     await add(damageComponent);
 
@@ -103,5 +121,10 @@ class CharacterPositionComponent extends PositionComponent
     await emptyHpBarComponent.show();
     await shadowComponent.show();
     await emptyFuryBarComponent.show();
+  }
+
+  void hideHit() {
+    damageComponent.hide();
+    criticalTextComponent.hide();
   }
 }
