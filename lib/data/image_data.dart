@@ -1,14 +1,14 @@
-const String warrior1Idle = "assets/images/characters/warrior_1_idle.png";
-const String warrior1Run = "assets/images/characters/warrior_1_run.png";
-const String warrior1Hit1 = "assets/images/characters/warrior_1_hit1.png";
-const String warrior1Defense = "assets/images/characters/warrior_1_defense.png";
-const String warrior1Death = "assets/images/characters/warrior_1_death.png";
+const String character1Idle = "assets/images/characters/1_idle.png";
+const String character1Run = "assets/images/characters/1_run.png";
+const String character1Attack = "assets/images/characters/1_attack.png";
+const String character1Defense = "assets/images/characters/1_defense.png";
+const String character1Death = "assets/images/characters/1_death.png";
 
-const String warrior2Idle = "assets/images/characters/warrior_2_idle.png";
-const String warrior2Run = "assets/images/characters/warrior_2_run.png";
-const String warrior2Hit1 = "assets/images/characters/warrior_2_hit1.png";
-const String warrior2Defense = "assets/images/characters/warrior_2_defense.png";
-const String warrior2Death = "assets/images/characters/warrior_2_death.png";
+const String character2Idle = "assets/images/characters/2_idle.png";
+const String character2Attack = "assets/images/characters/2_attack.png";
+const String character2Defense = "assets/images/characters/2_defense.png";
+const String character2Death = "assets/images/characters/2_death.png";
+const String character2Magic = "assets/images/characters/2_magic.png";
 
 const String stage1 = "assets/images/stages/1.png";
 

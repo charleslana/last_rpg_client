@@ -22,11 +22,11 @@ class HpBarComponent extends PositionComponent {
     return super.onLoad();
   }
 
-  void changeSize(int value) {
+  Future<void> changeSize(int value) async {
     final result = value * 84 / 100;
     _spriteComponent.size.x = result;
     if (result <= 25) {
-      _changeSprite();
+      await _changeSprite();
     }
   }
 

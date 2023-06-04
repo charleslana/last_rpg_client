@@ -3,18 +3,20 @@ import 'package:flame/components.dart';
 class CharacterFlameModel {
   final double scale;
   final SpriteModel idle;
-  final SpriteModel run;
-  final SpriteModel hit;
+  final SpriteModel? run;
+  final SpriteModel attack;
   final SpriteModel defense;
   final SpriteModel death;
+  final SpriteModel? magic;
 
   const CharacterFlameModel({
     required this.scale,
     required this.idle,
-    required this.run,
-    required this.hit,
+    this.run,
+    required this.attack,
     required this.defense,
     required this.death,
+    this.magic,
   });
 }
 

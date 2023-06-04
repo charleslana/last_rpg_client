@@ -17,7 +17,7 @@ class EmptyFuryBarComponent extends PositionComponent {
   });
 
   SpriteComponent _spriteComponent = SpriteComponent();
-  final _rageBarComponent = FuryBarComponent();
+  final _furyBarComponent = FuryBarComponent();
 
   @override
   Future<void> onLoad() async {
@@ -33,7 +33,7 @@ class EmptyFuryBarComponent extends PositionComponent {
     double pX = 0;
 
     if (isFlip) {
-      pX = characterPositionSize.x * characterScale * 1.2;
+      // pX = characterPositionSize.x * characterScale * 1.2;
     }
 
     position =
@@ -41,18 +41,18 @@ class EmptyFuryBarComponent extends PositionComponent {
 
     priority = 1;
 
-    await _spriteComponent.add(_rageBarComponent);
-
     await add(_spriteComponent);
+    await _spriteComponent.add(_furyBarComponent);
+
     return super.onLoad();
   }
 
   void changeSize(int value) {
-    _rageBarComponent.changeSize(value);
+    _furyBarComponent.changeSize(value);
   }
 
   Future<void> hide() async {
-    await _rageBarComponent.hide();
+    await _furyBarComponent.hide();
     await _spriteComponent.add(
       OpacityEffect.fadeOut(
         EffectController(duration: 0),
@@ -61,7 +61,7 @@ class EmptyFuryBarComponent extends PositionComponent {
   }
 
   Future<void> show() async {
-    await _rageBarComponent.show();
+    await _furyBarComponent.show();
     await _spriteComponent.add(
       OpacityEffect.fadeIn(
         EffectController(duration: 0),

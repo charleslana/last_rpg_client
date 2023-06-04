@@ -4,89 +4,92 @@ import 'package:last_rpg_client/model/character_model.dart';
 import '../flame/models/character_flame_model.dart';
 import 'image_data.dart';
 
-final warrior1 = CharacterFlameModel(
+final character1 = CharacterFlameModel(
   scale: 0.35,
   idle: SpriteModel(
-    image: warrior1Idle,
-    size: Vector2(39, 47),
-    amount: 6,
-    stepTime: 0.1,
+    image: character1Idle,
+    size: Vector2(33, 56),
+    amount: 4,
+    stepTime: 0.2,
   ),
   run: SpriteModel(
-    image: warrior1Run,
-    size: Vector2(50, 47),
-    amount: 6,
+    image: character1Run,
+    size: Vector2(44, 49),
+    amount: 8,
     stepTime: 0.1,
   ),
-  hit: SpriteModel(
-    image: warrior1Hit1,
-    size: Vector2(67, 59),
+  attack: SpriteModel(
+    image: character1Attack,
+    size: Vector2(94, 65),
     amount: 4,
-    stepTime: 0.1,
-    hitTime: 0.4,
+    stepTime: 0.2,
+    hitTime: 0.6,
     loop: false,
   ),
   defense: SpriteModel(
-    image: warrior1Defense,
-    size: Vector2(42, 45),
-    amount: 2,
-    stepTime: 0.3,
+    image: character1Defense,
+    size: Vector2(36, 56),
+    amount: 3,
+    stepTime: 0.1,
     loop: false,
   ),
   death: SpriteModel(
-    image: warrior1Death,
-    size: Vector2(59, 20),
-    amount: 1,
+    image: character1Death,
+    size: Vector2(74, 56),
+    amount: 7,
     stepTime: 0.1,
     loop: false,
   ),
 );
 
-final warrior2 = CharacterFlameModel(
+final character2 = CharacterFlameModel(
   scale: 0.35,
   idle: SpriteModel(
-    image: warrior2Idle,
-    size: Vector2(45, 48),
-    amount: 5,
-    stepTime: 0.15,
+    image: character2Idle,
+    size: Vector2(32, 36),
+    amount: 10,
+    amountPerRow: 1,
+    stepTime: 0.1,
   ),
-  run: SpriteModel(
-    image: warrior2Run,
-    size: Vector2(51, 53),
+  attack: SpriteModel(
+    image: character2Attack,
+    size: Vector2(40, 45),
     amount: 6,
     stepTime: 0.1,
-  ),
-  hit: SpriteModel(
-    image: warrior2Hit1,
-    size: Vector2(78, 52),
-    amount: 4,
-    stepTime: 0.1,
-    hitTime: 0.4,
+    hitTime: 0.7,
     loop: false,
   ),
   defense: SpriteModel(
-    image: warrior2Defense,
-    size: Vector2(61, 47),
-    amount: 2,
-    stepTime: 0.3,
+    image: character2Defense,
+    size: Vector2(30, 40),
+    amount: 3,
+    amountPerRow: 1,
+    stepTime: 0.1,
     loop: false,
   ),
   death: SpriteModel(
-    image: warrior2Death,
-    size: Vector2(57, 18),
-    amount: 1,
+    image: character2Death,
+    size: Vector2(63, 34),
+    amount: 10,
+    amountPerRow: 1,
     stepTime: 0.1,
     loop: false,
+  ),
+  magic: SpriteModel(
+    image: character2Magic,
+    size: Vector2(22, 3),
+    amount: 1,
+    stepTime: 0.1,
   ),
 );
 
 CharacterFlameModel getCharacter(CharacterModel character) {
   switch (character.id) {
     case 1:
-      return warrior1;
+      return character1;
     case 2:
-      return warrior2;
+      return character2;
     default:
-      return warrior1;
+      return character1;
   }
 }

@@ -74,15 +74,15 @@ class CharacterComponent extends SpriteAnimationComponent
 
   Future<void> setRunningAnimation() async {
     final spriteSheet = await Images(prefix: "").load(
-      character.run.image,
+      character.run!.image,
     );
-    final spriteSize = character.run.size;
+    final spriteSize = character.run!.size;
 
     SpriteAnimationData spriteAnimationData = SpriteAnimationData.sequenced(
-      amount: character.run.amount,
-      stepTime: character.run.stepTime,
+      amount: character.run!.amount,
+      stepTime: character.run!.stepTime,
       textureSize: spriteSize,
-      amountPerRow: character.run.amountPerRow,
+      amountPerRow: character.run!.amountPerRow,
     );
 
     final spriteAnimation = SpriteAnimationComponent.fromFrameData(
@@ -95,18 +95,18 @@ class CharacterComponent extends SpriteAnimationComponent
     size = spriteSize;
   }
 
-  Future<void> setHitAnimation() async {
+  Future<SpriteAnimationComponent> setAttackAnimation() async {
     final spriteSheet = await Images(prefix: "").load(
-      character.hit.image,
+      character.attack.image,
     );
-    final spriteSize = character.hit.size;
+    final spriteSize = character.attack.size;
 
     SpriteAnimationData spriteAnimationData = SpriteAnimationData.sequenced(
-      amount: character.hit.amount,
-      stepTime: character.hit.stepTime,
+      amount: character.attack.amount,
+      stepTime: character.attack.stepTime,
       textureSize: spriteSize,
-      amountPerRow: character.hit.amountPerRow,
-      loop: character.hit.loop,
+      amountPerRow: character.attack.amountPerRow,
+      loop: character.attack.loop,
     );
 
     final spriteAnimation = SpriteAnimationComponent.fromFrameData(
@@ -115,12 +115,39 @@ class CharacterComponent extends SpriteAnimationComponent
     _spriteAnimationComponent
       ..animation = spriteAnimation.animation
       ..size = spriteSize;
+
+    size = spriteSize;
+
+    return _spriteAnimationComponent;
+  }
+
+  Future<void> setMagicAnimation(Vector2 siz) async {
+    final spriteSheet = await Images(prefix: "").load(
+      character.magic!.image,
+    );
+    final spriteSize = character.magic!.size;
+
+    SpriteAnimationData spriteAnimationData = SpriteAnimationData.sequenced(
+      amount: character.magic!.amount,
+      stepTime: character.magic!.stepTime,
+      textureSize: spriteSize,
+      amountPerRow: character.magic!.amountPerRow,
+    );
+
+    final spriteAnimation = SpriteAnimationComponent.fromFrameData(
+        spriteSheet, spriteAnimationData);
+
+    _spriteAnimationComponent
+      ..animation = spriteAnimation.animation
+      ..size = spriteSize;
+
+    position = Vector2(0, siz.y - siz.y * 1.50);
 
     size = spriteSize;
   }
 
   int getWaitHit() {
-    return (character.hit.hitTime! * 1000).toInt();
+    return (character.attack.hitTime! * 1000).toInt();
   }
 
   Future<void> setDamageColor() async {
@@ -139,7 +166,7 @@ class CharacterComponent extends SpriteAnimationComponent
     );
   }
 
-  Future<void> setDefenseAnimation() async {
+  Future<SpriteAnimationComponent> setDefenseAnimation() async {
     final spriteSheet = await Images(prefix: "").load(
       character.defense.image,
     );
@@ -161,6 +188,8 @@ class CharacterComponent extends SpriteAnimationComponent
       ..size = spriteSize;
 
     size = spriteSize;
+
+    return _spriteAnimationComponent;
   }
 
   Future<void> setDeathAnimation() async {
@@ -198,6 +227,22 @@ class CharacterComponent extends SpriteAnimationComponent
   }
 
   Future<void> resetOpacity() async {
+    await _spriteAnimationComponent.add(
+      OpacityEffect.fadeIn(
+        EffectController(duration: 0),
+      ),
+    );
+  }
+
+  Future<void> hide() async {
+    await _spriteAnimationComponent.add(
+      OpacityEffect.fadeOut(
+        EffectController(duration: 0),
+      ),
+    );
+  }
+
+  Future<void> show() async {
     await _spriteAnimationComponent.add(
       OpacityEffect.fadeIn(
         EffectController(duration: 0),

@@ -33,7 +33,7 @@ class EmptyHpBarComponent extends PositionComponent {
     double pX = 0;
 
     if (isFlip) {
-      pX = characterPositionSize.x * characterScale * 1.1;
+      // pX = characterPositionSize.x * characterScale * 1.1;
     }
 
     position =
@@ -41,14 +41,14 @@ class EmptyHpBarComponent extends PositionComponent {
 
     priority = 1;
 
+    await add(_spriteComponent);
     await _spriteComponent.add(_hpBarComponent);
 
-    await add(_spriteComponent);
     return super.onLoad();
   }
 
-  void changeSize(int value) {
-    _hpBarComponent.changeSize(value);
+  Future<void> changeSize(int value) async {
+    await _hpBarComponent.changeSize(value);
   }
 
   Future<void> hide() async {
