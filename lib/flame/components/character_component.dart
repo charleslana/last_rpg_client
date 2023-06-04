@@ -166,7 +166,7 @@ class CharacterComponent extends SpriteAnimationComponent
     );
   }
 
-  Future<SpriteAnimationComponent> setDefenseAnimation() async {
+  Future<void> setDefenseAnimation() async {
     final spriteSheet = await Images(prefix: "").load(
       character.defense.image,
     );
@@ -188,8 +188,6 @@ class CharacterComponent extends SpriteAnimationComponent
       ..size = spriteSize;
 
     size = spriteSize;
-
-    return _spriteAnimationComponent;
   }
 
   Future<void> setDeathAnimation() async {

@@ -566,14 +566,18 @@ class BattleGame extends FlameGame {
         enemyPosition.getStartingPosition(),
         EffectController(duration: moveForwardDuration),
       )..onComplete = () async {
+          int defenseTime = 0;
           if (report.hpDefense != null) {
             await enemyPosition.character.setDamageColor();
+            await enemyPosition.character.setDefenseAnimation();
+            defenseTime = enemyPosition.character.character.defense.amount *
+                (enemyPosition.character.character.defense.stepTime * 1000)
+                    .toInt();
           }
-          final defenseAnimation =
-              await enemyPosition.character.setDefenseAnimation();
-          await characterPosition.character.setIdleAnimation();
-          defenseAnimation.animation?.onComplete = () async {
-            _handleEnemyHit(enemyPosition, report);
+          await Future.delayed(
+              Duration(milliseconds: defenseTime - moveWaitDuration), () async {
+            await characterPosition.character.setIdleAnimation();
+            await _handleEnemyHit(enemyPosition, report);
             await enemyPosition.character.setIdleAnimation();
             await magicPosition.hideCharacter();
             magicPosition.changePriority(magicPosition.priorityCharacter);
@@ -587,7 +591,7 @@ class BattleGame extends FlameGame {
             )..onComplete = () async {
                 setMoveLoopDuration();
               });
-          };
+          });
         });
     };
   }
@@ -606,8 +610,8 @@ class BattleGame extends FlameGame {
         EffectController(duration: moveForwardDuration),
       )..onComplete = () async {
           await characterPosition.character.setAttackAnimation();
-          await enemyPosition.character.setDefenseAnimation();
           if (report.hpDefense != null) {
+            await enemyPosition.character.setDefenseAnimation();
             await enemyPosition.character.setDamageColor();
           }
           await Future.delayed(
