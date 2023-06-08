@@ -1,6 +1,7 @@
 enum CharacterClassEnum {
   warrior,
-  guardian,
+  huntress,
+  wizard,
 }
 
 extension CharacterClassEnumExtension on CharacterClassEnum {
@@ -8,8 +9,10 @@ extension CharacterClassEnumExtension on CharacterClassEnum {
     switch (this) {
       case CharacterClassEnum.warrior:
         return 'Guerreiro';
-      case CharacterClassEnum.guardian:
-        return 'Guardião';
+      case CharacterClassEnum.huntress:
+        return 'Caçadora';
+      case CharacterClassEnum.wizard:
+        return 'Mago';
       default:
         return "";
     }

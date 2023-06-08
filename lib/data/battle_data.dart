@@ -19,11 +19,25 @@ final warriorCharacter = UserCharacterModel(
   level: 1,
 );
 
-final guardianCharacter = UserCharacterModel(
+final huntressCharacter = UserCharacterModel(
   character: CharacterModel(
     id: 2,
-    name: "Guardian",
-    characterClass: CharacterClassEnum.values.byName("guardian"),
+    name: "Caçadora",
+    characterClass: CharacterClassEnum.values.byName("huntress"),
+    hp: 100,
+    furyHit: 10,
+    furyDefense: 20,
+    agility: 1,
+    rarity: RarityEnum.values.byName("a"),
+  ),
+  level: 2,
+);
+
+final wizardCharacter = UserCharacterModel(
+  character: CharacterModel(
+    id: 3,
+    name: "Mago",
+    characterClass: CharacterClassEnum.values.byName("wizard"),
     hp: 100,
     furyHit: 10,
     furyDefense: 20,
@@ -35,11 +49,12 @@ final guardianCharacter = UserCharacterModel(
 
 final List<UserCharacterModel> friendCharacters = [
   warriorCharacter,
-  guardianCharacter,
+  huntressCharacter,
+  wizardCharacter,
 ];
 
 final List<UserCharacterModel> enemyCharacters = [
-  guardianCharacter,
+  huntressCharacter,
   warriorCharacter,
 ];
 

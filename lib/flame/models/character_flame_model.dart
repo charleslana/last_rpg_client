@@ -8,6 +8,7 @@ class CharacterFlameModel {
   final SpriteModel defense;
   final SpriteModel death;
   final SpriteModel? magic;
+  final SpriteModel? area;
 
   const CharacterFlameModel({
     required this.scale,
@@ -17,6 +18,7 @@ class CharacterFlameModel {
     required this.defense,
     required this.death,
     this.magic,
+    this.area,
   });
 }
 
