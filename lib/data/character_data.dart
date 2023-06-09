@@ -94,8 +94,9 @@ final character3 = CharacterFlameModel(
   ),
   attack: SpriteModel(
     image: character3Attack,
-    size: Vector2(40, 45),
-    amount: 6,
+    size: Vector2(140, 136),
+    amount: 9,
+    amountPerRow: 3,
     stepTime: 0.1,
     hitTime: 0.7,
     loop: false,

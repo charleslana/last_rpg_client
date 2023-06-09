@@ -124,7 +124,12 @@ class BattleGame extends FlameGame {
       await _moveCharacter(source, target, report);
       return;
     }
-    await _moveCharacterMagic(source, target, report);
+    final spriteMagic = source.character.character.magic;
+    if (spriteMagic != null) {
+      await _moveCharacterMagic(source, target, report);
+      return;
+    }
+    await _moveCharacterArea(source, target, report);
   }
 
   CharacterPositionComponent _getTurn(ReportModel report) {
@@ -549,6 +554,22 @@ class BattleGame extends FlameGame {
         }
       }
     });
+  }
+
+  Future<void> _moveCharacterArea(CharacterPositionComponent source,
+      CharacterPositionComponent target, ReportModel report) async {
+    final characterPosition = source;
+    final enemyPosition = target;
+    characterPosition.hideHit();
+    final attackAnimation =
+        await characterPosition.character.setAttackAnimation();
+    attackAnimation.animation?.onComplete = () async {
+      if (report.turn == CharacterTurnEnum.friend) {
+        print("friend");
+      } else {
+        print("enemy");
+      }
+    };
   }
 
   Future<void> _moveCharacterMagic(CharacterPositionComponent source,

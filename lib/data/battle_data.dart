@@ -81,8 +81,15 @@ final reportModel = [
   ),
   ReportModel(
     turnQuantity: 1,
+    turn: CharacterTurnEnum.values.byName("friend"),
+    friendPosition: 3,
+    enemyPosition: 1,
+    dodge: true,
+  ),
+  ReportModel(
+    turnQuantity: 1,
     turn: CharacterTurnEnum.values.byName("enemy"),
-    friendPosition: 1,
+    friendPosition: 2,
     enemyPosition: 1,
     dodge: true,
   ),
