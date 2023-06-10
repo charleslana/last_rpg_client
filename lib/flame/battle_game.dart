@@ -72,15 +72,12 @@ class BattleGame extends FlameGame {
   double moveForwardDuration = 0.5 - 0.0;
   double moveBackDuration = 0.5 - 0.0;
   int moveWaitDuration = 0;
-  late int moveLoopDuration;
 
   @override
   Color backgroundColor() => Colors.white;
 
   @override
   FutureOr<void> onLoad() async {
-    setMoveLoopDuration();
-
     await add(BattleBackgroundComponent());
 
     _addCharacters();
@@ -91,50 +88,46 @@ class BattleGame extends FlameGame {
     return super.onLoad();
   }
 
-  void setMoveLoopDuration() {
-    moveLoopDuration = (moveForwardDuration * 1000).toInt() +
-        (moveBackDuration * 1000).toInt() +
-        moveWaitDuration;
-  }
-
   Future<void> runAllCharacters() async {
     final reports = _getReport().reports;
-    int loopDuration = 0;
+    int hitTime = 0;
     await Future.forEach(reports, (report) async {
       final source = _getTurn(report);
       var target = _getEnemyPosition(report.enemyPosition);
       if (report.turn == CharacterTurnEnum.enemy) {
         target = _getFriendPosition(report.friendPosition);
       }
-      if (reports.first == report) {
-        await _validateSource(source, target, report);
-        return;
-      }
-      loopDuration = moveLoopDuration + target.character.getWaitHit();
-      await Future.delayed(Duration(milliseconds: loopDuration), () async {
-        await _validateSource(source, target, report);
+      await Future.delayed(Duration(milliseconds: hitTime), () async {
+        hitTime = await _validateSource(source, target, report);
       });
     });
-    var target = _getEnemyPosition(reports.last.enemyPosition);
-    loopDuration = moveLoopDuration + target.character.getWaitHit();
-    await Future.delayed(Duration(milliseconds: loopDuration), () async {
+    await Future.delayed(Duration(milliseconds: hitTime), () async {
       _showFinishDialog();
     });
   }
 
-  Future<void> _validateSource(CharacterPositionComponent source,
+  Future<int> _validateSource(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
-    final spriteRun = source.character.character.run;
-    if (spriteRun != null) {
-      await _moveCharacter(source, target, report);
-      return;
+    if (source.character.character.run != null) {
+      final hitTime = await _runCharacter(source, target, report);
+      return (moveForwardDuration * 1000).toInt() +
+          (source.character.character.attack.hitTime! * 1000).toInt() +
+          hitTime +
+          (moveBackDuration * 1000).toInt();
     }
-    final spriteMagic = source.character.character.magic;
-    if (spriteMagic != null) {
-      await _moveCharacterMagic(source, target, report);
-      return;
+    if (source.character.character.magic != null) {
+      final hitTime = await _magicCharacter(source, target, report);
+      return (moveForwardDuration * 1000).toInt() +
+          (source.character.character.magic!.hitTime! * 1000).toInt() +
+          hitTime +
+          600;
     }
-    await _moveCharacterArea(source, target, report);
+    if (source.character.character.area != null) {
+      final hitTime = await _areaCharacter(source, target, report);
+      return (source.character.character.area!.hitTime! * 1000).toInt() +
+          hitTime;
+    }
+    return 0;
   }
 
   CharacterPositionComponent _getTurn(ReportModel report) {
@@ -154,12 +147,9 @@ class BattleGame extends FlameGame {
   AreaComponent _getAreaTurn(
       ReportModel report, CharacterFlameModel character) {
     if (report.turn == CharacterTurnEnum.friend) {
-      return AreaComponent(
-        character: character,
-        isFlip: true,
-      );
+      return _friendAreaComponent.copyWith(character: character);
     }
-    return AreaComponent(character: character);
+    return _enemyAreaComponent.copyWith(character: character);
   }
 
   CharacterPositionComponent _getFriendPosition(int position) {
@@ -352,7 +342,11 @@ class BattleGame extends FlameGame {
     _enemyMagicPosition6 = _enemyPosition6.copyWith();
 
     final area = _friend1.copyWith(character: character3);
-    _friendAreaComponent = AreaComponent(character: area.character);
+    _friendAreaComponent = AreaComponent(
+      character: area.character,
+      isFlip: true,
+    );
+    _enemyAreaComponent = AreaComponent(character: area.character);
   }
 
   Future<void> _mountBattle() async {
@@ -575,26 +569,51 @@ class BattleGame extends FlameGame {
     });
   }
 
-  Future<void> _moveCharacterArea(CharacterPositionComponent source,
+  Future<int> _areaCharacter(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
     final friendPosition = source;
     final enemyPosition = target;
     friendPosition.hideHit();
     final attackAnimation = await friendPosition.character.setAttackAnimation();
+    int hitTime = 0;
     attackAnimation.animation?.onComplete = () async {
-      _friendAreaComponent =
+      await friendPosition.character.setIdleAnimation();
+      final areaComponent =
           _getAreaTurn(report, friendPosition.character.character);
-      await add(_friendAreaComponent);
+      await add(areaComponent);
+      final areaAnimation = await areaComponent.setAreaAnimation();
+      areaAnimation.animation?.onComplete = () async {
+        areaComponent.hide();
+        int defenseTime = 0;
+        if (report.hpDefense != null) {
+          await enemyPosition.character.setDamageColor();
+          await enemyPosition.character.setDefenseAnimation();
+          defenseTime = enemyPosition.character.character.defense.amount *
+              (enemyPosition.character.character.defense.stepTime * 1000)
+                  .toInt();
+        }
+        await Future.delayed(
+            Duration(milliseconds: defenseTime - moveWaitDuration), () async {
+          hitTime = await _handleEnemyHit(enemyPosition, report);
+        });
+      };
     };
+    return hitTime;
   }
 
-  Future<void> _moveCharacterMagic(CharacterPositionComponent source,
+  Future<int> _magicCharacter(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
+    int hitTime = 0;
     final friendPosition = source;
     final enemyPosition = target;
     final magicPosition = _getMagicTurn(report);
     friendPosition.hideHit();
     final attackAnimation = await friendPosition.character.setAttackAnimation();
+    int defenseTime = 0;
+    if (report.hpDefense != null) {
+      defenseTime = enemyPosition.character.character.defense.amount *
+          (enemyPosition.character.character.defense.stepTime * 1000).toInt();
+    }
     attackAnimation.animation?.onComplete = () async {
       magicPosition.changePriority(7);
       await magicPosition.showCharacter();
@@ -602,18 +621,14 @@ class BattleGame extends FlameGame {
         enemyPosition.getStartingPosition(),
         EffectController(duration: moveForwardDuration),
       )..onComplete = () async {
-          int defenseTime = 0;
           if (report.hpDefense != null) {
             await enemyPosition.character.setDamageColor();
             await enemyPosition.character.setDefenseAnimation();
-            defenseTime = enemyPosition.character.character.defense.amount *
-                (enemyPosition.character.character.defense.stepTime * 1000)
-                    .toInt();
           }
           await Future.delayed(
               Duration(milliseconds: defenseTime - moveWaitDuration), () async {
             await friendPosition.character.setIdleAnimation();
-            await _handleEnemyHit(enemyPosition, report);
+            hitTime = await _handleEnemyHit(enemyPosition, report);
             await enemyPosition.character.setIdleAnimation();
             await magicPosition.hideCharacter();
             magicPosition.changePriority(magicPosition.priorityCharacter);
@@ -624,16 +639,16 @@ class BattleGame extends FlameGame {
             await magicPosition.add(MoveToEffect(
               magicPosition.getStartingPosition(),
               EffectController(duration: 0),
-            )..onComplete = () async {
-                setMoveLoopDuration();
-              });
+            ));
           });
         });
     };
+    return hitTime + defenseTime;
   }
 
-  Future<void> _moveCharacter(CharacterPositionComponent source,
+  Future<int> _runCharacter(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
+    int hitTime = 0;
     final friendPosition = source;
     final enemyPosition = target;
     friendPosition.hideHit();
@@ -654,22 +669,26 @@ class BattleGame extends FlameGame {
               Duration(
                   milliseconds: friendPosition.character.getWaitHit() -
                       moveWaitDuration), () async {
-            _handleEnemyHit(enemyPosition, report);
+            hitTime = await _handleEnemyHit(enemyPosition, report);
             await friendPosition.character.setRunningAnimation();
             await _moveStartingPosition(friendPosition, report);
           });
         },
     );
+    return hitTime;
   }
 
-  Future<void> _handleEnemyHit(
+  Future<int> _handleEnemyHit(
       CharacterPositionComponent enemyPosition, ReportModel report) async {
+    int defenseTime = 0;
     if (report.hpDefense != null) {
       await enemyPosition.emptyHpBarComponent.changeSize(report.hpDefense!);
       if (report.critical == true) {
         await enemyPosition.criticalTextComponent.show();
       }
       await enemyPosition.damageComponent.show(report.damage!);
+      defenseTime =
+          (enemyPosition.character.character.defense.hitTime! * 1000).toInt();
     } else {
       await enemyPosition.dodgeTextComponent.show();
     }
@@ -682,6 +701,7 @@ class BattleGame extends FlameGame {
         enemyPosition.emptyFuryBarComponent.changeSize(report.furyDefense!);
       }
     }
+    return defenseTime;
   }
 
   Future<void> _moveStartingPosition(
@@ -711,7 +731,6 @@ class BattleGame extends FlameGame {
             characterPosition.emptyFuryBarComponent
                 .changeSize(report.furyAttack!);
           }
-          setMoveLoopDuration();
         },
     );
   }

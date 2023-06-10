@@ -32,6 +32,7 @@ final character1 = CharacterFlameModel(
     amount: 3,
     stepTime: 0.1,
     loop: false,
+    hitTime: 0.3,
   ),
   death: SpriteModel(
     image: character1Death,
@@ -66,6 +67,7 @@ final character2 = CharacterFlameModel(
     amountPerRow: 1,
     stepTime: 0.1,
     loop: false,
+    hitTime: 0.3,
   ),
   death: SpriteModel(
     image: character2Death,
@@ -80,6 +82,7 @@ final character2 = CharacterFlameModel(
     size: Vector2(22, 3),
     amount: 1,
     stepTime: 0.1,
+    hitTime: 0.1,
   ),
 );
 
@@ -107,6 +110,7 @@ final character3 = CharacterFlameModel(
     amount: 4,
     stepTime: 0.1,
     loop: false,
+    hitTime: 0.4,
   ),
   death: SpriteModel(
     image: character3Death,
@@ -121,7 +125,8 @@ final character3 = CharacterFlameModel(
     amount: 20,
     amountPerRow: 4,
     stepTime: 0.05,
-    loop: true,
+    loop: false,
+    hitTime: 2.2,
   ),
 );
 

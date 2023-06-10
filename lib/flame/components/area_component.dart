@@ -48,7 +48,7 @@ class AreaComponent extends PositionComponent with HasGameRef<BattleGame> {
     return super.onLoad();
   }
 
-  Future<void> setAreaAnimation() async {
+  Future<SpriteAnimationComponent> setAreaAnimation() async {
     final spriteSheet = await Images(prefix: "").load(
       character.area!.image,
     );
@@ -71,6 +71,8 @@ class AreaComponent extends PositionComponent with HasGameRef<BattleGame> {
       ..size = spriteSize;
 
     size = spriteSize;
+
+    return _spriteAnimationComponent;
   }
 
   Future<void> hide() async {

@@ -126,6 +126,7 @@ class CharacterPositionComponent extends PositionComponent
   void hideHit() {
     damageComponent.hide();
     criticalTextComponent.hide();
+    dodgeTextComponent.hide();
   }
 
   Future<void> hideCharacter() async {

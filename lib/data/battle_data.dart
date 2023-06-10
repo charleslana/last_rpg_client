@@ -56,6 +56,7 @@ final List<UserCharacterModel> friendCharacters = [
 final List<UserCharacterModel> enemyCharacters = [
   huntressCharacter,
   warriorCharacter,
+  wizardCharacter,
 ];
 
 final reportModel = [
@@ -104,6 +105,13 @@ final reportModel = [
     furyAttack: 5,
   ),
   ReportModel(
+    turnQuantity: 1,
+    turn: CharacterTurnEnum.values.byName("enemy"),
+    friendPosition: 1,
+    enemyPosition: 3,
+    dodge: true,
+  ),
+  ReportModel(
     turnQuantity: 2,
     turn: CharacterTurnEnum.values.byName("friend"),
     friendPosition: 1,
@@ -126,6 +134,13 @@ final reportModel = [
     furyAttack: 10,
   ),
   ReportModel(
+    turnQuantity: 3,
+    turn: CharacterTurnEnum.values.byName("friend"),
+    friendPosition: 3,
+    enemyPosition: 3,
+    dodge: true,
+  ),
+  ReportModel(
     turnQuantity: 2,
     turn: CharacterTurnEnum.values.byName("enemy"),
     friendPosition: 2,
@@ -144,6 +159,17 @@ final reportModel = [
     enemyPosition: 2,
     hpDefense: 0,
     damage: 20,
+    furyDefense: 85,
+    furyAttack: 20,
+    death: true,
+  ),
+  ReportModel(
+    turnQuantity: 3,
+    turn: CharacterTurnEnum.values.byName("friend"),
+    friendPosition: 3,
+    enemyPosition: 3,
+    hpDefense: 0,
+    damage: 50,
     furyDefense: 85,
     furyAttack: 20,
     death: true,
