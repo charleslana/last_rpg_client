@@ -88,7 +88,7 @@ class BattleGame extends FlameGame {
     return super.onLoad();
   }
 
-  Future<void> runAllCharacters() async {
+  Future<void> init() async {
     final reports = _getReport().reports;
     int hitTime = 0;
     await Future.forEach(reports, (report) async {
