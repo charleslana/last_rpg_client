@@ -12,8 +12,8 @@ const String character2Magic = "assets/images/characters/2_magic.png";
 
 const String character3Idle = "assets/images/characters/3_idle.png";
 const String character3Attack = "assets/images/characters/3_attack.png";
-const String character3Defense = "assets/images/characters/3_idle.png";
-const String character3Death = "assets/images/characters/3_idle.png";
+const String character3Defense = "assets/images/characters/3_defense.png";
+const String character3Death = "assets/images/characters/3_death.png";
 const String character3Area = "assets/images/characters/3_area.png";
 
 const String stage1 = "assets/images/stages/1.png";

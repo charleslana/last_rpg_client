@@ -6,6 +6,8 @@ import 'package:flame/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:last_rpg_client/data/battle_data.dart';
 import 'package:last_rpg_client/enum/character_turn_enum.dart';
+import 'package:last_rpg_client/flame/components/area_component.dart';
+import 'package:last_rpg_client/flame/models/character_flame_model.dart';
 import 'package:last_rpg_client/model/battle_report_model.dart';
 import 'package:last_rpg_client/routes/app_routes.dart';
 
@@ -63,6 +65,9 @@ class BattleGame extends FlameGame {
   late CharacterPositionComponent _enemyMagicPosition4;
   late CharacterPositionComponent _enemyMagicPosition5;
   late CharacterPositionComponent _enemyMagicPosition6;
+
+  late AreaComponent _friendAreaComponent;
+  late AreaComponent _enemyAreaComponent;
 
   double moveForwardDuration = 0.5 - 0.0;
   double moveBackDuration = 0.5 - 0.0;
@@ -144,6 +149,17 @@ class BattleGame extends FlameGame {
       return _getFriendMagicPosition(report.friendPosition);
     }
     return _getEnemyMagicPosition(report.enemyPosition);
+  }
+
+  AreaComponent _getAreaTurn(
+      ReportModel report, CharacterFlameModel character) {
+    if (report.turn == CharacterTurnEnum.friend) {
+      return AreaComponent(
+        character: character,
+        isFlip: true,
+      );
+    }
+    return AreaComponent(character: character);
   }
 
   CharacterPositionComponent _getFriendPosition(int position) {
@@ -334,6 +350,9 @@ class BattleGame extends FlameGame {
     _enemyMagicPosition4 = _enemyPosition4.copyWith();
     _enemyMagicPosition5 = _enemyPosition5.copyWith();
     _enemyMagicPosition6 = _enemyPosition6.copyWith();
+
+    final area = _friend1.copyWith(character: character3);
+    _friendAreaComponent = AreaComponent(character: area.character);
   }
 
   Future<void> _mountBattle() async {
@@ -558,28 +577,24 @@ class BattleGame extends FlameGame {
 
   Future<void> _moveCharacterArea(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
-    final characterPosition = source;
+    final friendPosition = source;
     final enemyPosition = target;
-    characterPosition.hideHit();
-    final attackAnimation =
-        await characterPosition.character.setAttackAnimation();
+    friendPosition.hideHit();
+    final attackAnimation = await friendPosition.character.setAttackAnimation();
     attackAnimation.animation?.onComplete = () async {
-      if (report.turn == CharacterTurnEnum.friend) {
-        print("friend");
-      } else {
-        print("enemy");
-      }
+      _friendAreaComponent =
+          _getAreaTurn(report, friendPosition.character.character);
+      await add(_friendAreaComponent);
     };
   }
 
   Future<void> _moveCharacterMagic(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
-    final characterPosition = source;
+    final friendPosition = source;
     final enemyPosition = target;
     final magicPosition = _getMagicTurn(report);
-    characterPosition.hideHit();
-    final attackAnimation =
-        await characterPosition.character.setAttackAnimation();
+    friendPosition.hideHit();
+    final attackAnimation = await friendPosition.character.setAttackAnimation();
     attackAnimation.animation?.onComplete = () async {
       magicPosition.changePriority(7);
       await magicPosition.showCharacter();
@@ -597,13 +612,13 @@ class BattleGame extends FlameGame {
           }
           await Future.delayed(
               Duration(milliseconds: defenseTime - moveWaitDuration), () async {
-            await characterPosition.character.setIdleAnimation();
+            await friendPosition.character.setIdleAnimation();
             await _handleEnemyHit(enemyPosition, report);
             await enemyPosition.character.setIdleAnimation();
             await magicPosition.hideCharacter();
             magicPosition.changePriority(magicPosition.priorityCharacter);
             if (report.furyAttack != null) {
-              characterPosition.emptyFuryBarComponent
+              friendPosition.emptyFuryBarComponent
                   .changeSize(report.furyAttack!);
             }
             await magicPosition.add(MoveToEffect(
@@ -619,29 +634,29 @@ class BattleGame extends FlameGame {
 
   Future<void> _moveCharacter(CharacterPositionComponent source,
       CharacterPositionComponent target, ReportModel report) async {
-    final characterPosition = source;
+    final friendPosition = source;
     final enemyPosition = target;
-    characterPosition.hideHit();
-    characterPosition.changePriority(7);
-    await characterPosition.hideAll();
-    await characterPosition.character.setRunningAnimation();
-    await characterPosition.add(
+    friendPosition.hideHit();
+    friendPosition.changePriority(7);
+    await friendPosition.hideAll();
+    await friendPosition.character.setRunningAnimation();
+    await friendPosition.add(
       MoveToEffect(
         enemyPosition.getStartingPosition(),
         EffectController(duration: moveForwardDuration),
       )..onComplete = () async {
-          await characterPosition.character.setAttackAnimation();
+          await friendPosition.character.setAttackAnimation();
           if (report.hpDefense != null) {
             await enemyPosition.character.setDefenseAnimation();
             await enemyPosition.character.setDamageColor();
           }
           await Future.delayed(
               Duration(
-                  milliseconds: characterPosition.character.getWaitHit() -
+                  milliseconds: friendPosition.character.getWaitHit() -
                       moveWaitDuration), () async {
             _handleEnemyHit(enemyPosition, report);
-            await characterPosition.character.setRunningAnimation();
-            await _moveStartingPosition(characterPosition, report);
+            await friendPosition.character.setRunningAnimation();
+            await _moveStartingPosition(friendPosition, report);
           });
         },
     );
